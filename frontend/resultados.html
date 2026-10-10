@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultados y Métricas — Predicción de Demanda</title>
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <!-- ══ CABECERA ══════════════════════════════════════════ -->
+  <header class="cabecera">
+    <div class="cabecera__marca">
+      <div class="cabecera__logo">SP</div>
+      <div>
+        <div class="cabecera__titulo">Predicción de Demanda</div>
+        <div class="cabecera__subtitulo">Supermercados Peruanos S.A.</div>
+      </div>
+    </div>
+    <nav class="cabecera__nav">
+      <a href="index.html"      class="nav-link">Históricos y Predicción</a>
+      <a href="resultados.html" class="nav-link nav-link--activo">Resultados y Métricas</a>
+    </nav>
+  </header>
+
+  <!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════ -->
+  <main class="contenedor-principal">
+
+    <!-- ── RF03: Resultados de predicciones ───────────────── -->
+    <section class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <h2 class="tarjeta__titulo">
+          <span class="tarjeta__icono">📊</span>
+          Resultados de predicciones generadas
+          <span class="badge badge--gris" style="font-size:.7rem;margin-left:.25rem">RF03</span>
+        </h2>
+        <div class="flex-centrar">
+          <span id="conteo-predicciones" style="font-size:.8rem;color:#546e7a"></span>
+          <button id="btn-reintentar-pred" class="btn btn--secundario oculto" style="padding:.35rem .8rem;font-size:.8rem">
+            Reintentar
+          </button>
+        </div>
+      </div>
+      <div class="tarjeta__cuerpo" style="padding:0">
+
+        <div id="seccion-tabla-pred">
+          <div class="tabla-contenedor">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto fresco</th>
+                  <th>Periodo</th>
+                  <th class="texto-der">Demanda estimada</th>
+                  <th class="texto-centro">Generada</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-tabla-pred">
+                <tr>
+                  <td colspan="4" class="tabla--vacia">Cargando…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RF05: Métricas de evaluación del modelo ────────── -->
+    <section class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <h2 class="tarjeta__titulo">
+          <span class="tarjeta__icono">📐</span>
+          Métricas de evaluación del modelo
+          <span class="badge badge--gris" style="font-size:.7rem;margin-left:.25rem">RF05</span>
+        </h2>
+        <button id="btn-reintentar-met" class="btn btn--secundario oculto" style="padding:.35rem .8rem;font-size:.8rem">
+          Reintentar
+        </button>
+      </div>
+      <div class="tarjeta__cuerpo">
+
+        <div id="alerta-metricas" class="alerta alerta--oculta" role="alert"></div>
+
+        <div id="seccion-metricas">
+
+          <!-- KPIs MAE y MAPE -->
+          <p class="seccion-titulo">Indicadores de precisión</p>
+          <div class="metricas-fila" style="margin-bottom:1.25rem">
+
+            <div class="kpi">
+              <div class="kpi__etiqueta">MAE</div>
+              <div id="kpi-mae" class="kpi__valor">…</div>
+              <div class="kpi__unidad">Error Absoluto Medio · unidades</div>
+              <div class="kpi__nota">Promedio de |predicción − real|</div>
+            </div>
+
+            <div class="kpi">
+              <div class="kpi__etiqueta">MAPE</div>
+              <div id="kpi-mape" class="kpi__valor">…</div>
+              <div class="kpi__unidad">Error Porcentual Absoluto Medio · %</div>
+              <div class="kpi__nota">Pares con real = 0 excluidos</div>
+            </div>
+
+            <div class="kpi">
+              <div class="kpi__etiqueta">Pares utilizados</div>
+              <div id="kpi-pares" class="kpi__valor">…</div>
+              <div class="kpi__unidad">Predicción + dato histórico</div>
+            </div>
+
+          </div>
+
+          <!-- Alerta pares excluidos del MAPE (RF05 criterio 6) -->
+          <div id="alerta-excluidos" class="alerta alerta--oculta" role="alert"
+               style="margin-bottom:1.25rem"></div>
+
+          <!-- Tabla de comparaciones (RF04 embebida para contexto) -->
+          <p class="seccion-titulo">Detalle de comparaciones utilizadas</p>
+          <div class="tabla-contenedor">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto fresco</th>
+                  <th>Periodo</th>
+                  <th class="texto-der">Demanda real</th>
+                  <th class="texto-der">Demanda estimada</th>
+                  <th class="texto-der">Diferencia absoluta</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-tabla-comp">
+                <tr>
+                  <td colspan="5" class="tabla--vacia">Cargando…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="alerta alerta--info mt-2" role="note">
+            Métricas calculadas con datos simulados. En producción se calculan sobre los pares
+            reales almacenados en SQLite.
+          </p>
+
+        </div><!-- /seccion-metricas -->
+
+      </div>
+    </section>
+
+    <!-- ══ PUNTO DE EXTENSIÓN — UNIDAD 3 ════════════════════ -->
+    <div class="extension-u3" role="complementary" aria-label="Punto de extensión futuro">
+      <div class="extension-u3__icono" aria-hidden="true">💬</div>
+      <div class="extension-u3__texto">
+        <div class="extension-u3__nombre">Asistente — Unidad 3</div>
+        <div class="extension-u3__descripcion">
+          Este espacio está reservado para el agente conversacional que se incorporará
+          en la Unidad 3. Permitirá consultar resultados y métricas en lenguaje natural
+          a través del Servidor MCP en modo solo lectura. No implementado en esta unidad.
+        </div>
+      </div>
+      <div class="extension-u3__etiqueta" aria-hidden="true">Próximamente</div>
+    </div>
+
+  </main>
+
+  <!-- ══ PIE ═══════════════════════════════════════════════ -->
+  <footer class="pie">
+    Sistema de predicción de demanda · Supermercados Peruanos S.A. · Datos simulados
+  </footer>
+
+  <script src="js/resultados.js"></script>
+</body>
+</html>

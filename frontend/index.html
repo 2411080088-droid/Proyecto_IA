@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Históricos y Predicción — Predicción de Demanda</title>
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <!-- ══ CABECERA ══════════════════════════════════════════ -->
+  <header class="cabecera">
+    <div class="cabecera__marca">
+      <div class="cabecera__logo">SP</div>
+      <div>
+        <div class="cabecera__titulo">Predicción de Demanda</div>
+        <div class="cabecera__subtitulo">Supermercados Peruanos S.A.</div>
+      </div>
+    </div>
+    <nav class="cabecera__nav">
+      <a href="index.html"      class="nav-link nav-link--activo">Históricos y Predicción</a>
+      <a href="resultados.html" class="nav-link">Resultados y Métricas</a>
+    </nav>
+  </header>
+
+  <!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════ -->
+  <main class="contenedor-principal">
+
+    <!-- ── RF01: Consulta de datos históricos ─────────────── -->
+    <section class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <h2 class="tarjeta__titulo">
+          <span class="tarjeta__icono">📋</span>
+          Consulta de datos históricos
+          <span class="badge badge--gris" style="font-size:.7rem;margin-left:.25rem">RF01</span>
+        </h2>
+      </div>
+      <div class="tarjeta__cuerpo">
+
+        <div class="formulario">
+          <div class="formulario__fila">
+            <div class="formulario__grupo">
+              <label for="sel-producto-hist">Producto fresco</label>
+              <select id="sel-producto-hist" class="select-producto">
+                <option value="">— Seleccione un producto —</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="formulario__fila">
+            <div id="alerta-hist" class="alerta alerta--oculta" role="alert"></div>
+          </div>
+
+          <div class="flex gap-1">
+            <button id="btn-consultar-hist" class="btn btn--primario">
+              Consultar históricos
+            </button>
+            <button id="btn-limpiar-hist" class="btn btn--secundario">
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla de resultados (oculta hasta consultar) -->
+        <div id="seccion-historicos" class="oculto" style="margin-top:1.25rem">
+          <p class="seccion-titulo">
+            <span id="titulo-tabla-hist">Datos históricos</span>
+            &nbsp;·&nbsp;
+            <span id="conteo-registros" style="font-weight:400;text-transform:none;letter-spacing:0"></span>
+          </p>
+          <div class="tabla-contenedor">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Producto</th>
+                  <th class="texto-der">Demanda real</th>
+                  <th class="texto-centro">Unidad</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-tabla-hist"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RF02: Generación de predicción ─────────────────── -->
+    <section class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <h2 class="tarjeta__titulo">
+          <span class="tarjeta__icono">🔮</span>
+          Generación de predicción de demanda
+          <span class="badge badge--gris" style="font-size:.7rem;margin-left:.25rem">RF02</span>
+        </h2>
+      </div>
+      <div class="tarjeta__cuerpo">
+
+        <div class="formulario">
+          <div class="formulario__fila">
+            <div class="formulario__grupo">
+              <label for="sel-producto-pred">Producto fresco</label>
+              <select id="sel-producto-pred" class="select-producto">
+                <option value="">— Seleccione un producto —</option>
+              </select>
+            </div>
+            <div class="formulario__grupo">
+              <label for="sel-semana">Periodo (semana)</label>
+              <select id="sel-semana">
+                <option value="">— Seleccione una semana —</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="formulario__fila">
+            <div id="alerta-pred" class="alerta alerta--oculta" role="alert"></div>
+          </div>
+
+          <div class="flex gap-1">
+            <button id="btn-generar-pred" class="btn btn--primario">
+              Generar predicción
+            </button>
+          </div>
+        </div>
+
+        <!-- Resultado de predicción (oculto hasta generar) -->
+        <div id="seccion-prediccion" class="oculto" style="margin-top:1.25rem">
+
+          <div id="alerta-pred-actualizada" class="alerta alerta--aviso oculto" role="alert"
+               style="margin-bottom:.75rem">
+            El registro de predicción anterior fue actualizado con el nuevo valor generado.
+          </div>
+
+          <p class="seccion-titulo">Resultado de la predicción</p>
+
+          <div class="metricas-fila">
+            <div class="kpi">
+              <div class="kpi__etiqueta">Producto</div>
+              <div id="pred-producto" class="kpi__valor" style="font-size:1.1rem;line-height:1.3"></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Periodo</div>
+              <div id="pred-periodo" class="kpi__valor" style="font-size:1.4rem"></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Demanda estimada</div>
+              <div id="pred-valor" class="kpi__valor"></div>
+              <div id="pred-unidad" class="kpi__unidad"></div>
+            </div>
+          </div>
+
+          <p class="alerta alerta--info mt-2" role="note">
+            Predicción generada con datos simulados. En producción este valor proviene de la API de Gemini.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RF04: Comparación predicción vs. real ─────────── -->
+    <section class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <h2 class="tarjeta__titulo">
+          <span class="tarjeta__icono">⚖️</span>
+          Comparación: predicción vs. demanda real
+          <span class="badge badge--gris" style="font-size:.7rem;margin-left:.25rem">RF04</span>
+        </h2>
+      </div>
+      <div class="tarjeta__cuerpo">
+
+        <div class="formulario">
+          <div class="formulario__fila">
+            <div class="formulario__grupo">
+              <label for="sel-producto-comp">Producto fresco</label>
+              <select id="sel-producto-comp" class="select-producto">
+                <option value="">— Seleccione un producto —</option>
+              </select>
+            </div>
+            <div class="formulario__grupo">
+              <label for="sel-periodo-comp">Periodo (semana)</label>
+              <select id="sel-periodo-comp">
+                <option value="">— Seleccione una semana —</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="formulario__fila">
+            <div id="alerta-comparacion" class="alerta alerta--oculta" role="alert"></div>
+          </div>
+
+          <div class="flex gap-1">
+            <button id="btn-comparar" class="btn btn--primario">Comparar</button>
+          </div>
+        </div>
+
+        <!-- Resultado de comparación -->
+        <div id="seccion-comparacion" class="oculto" style="margin-top:1.25rem">
+          <p class="seccion-titulo">Resultado de la comparación</p>
+          <div class="metricas-fila">
+            <div class="kpi">
+              <div class="kpi__etiqueta">Producto</div>
+              <div id="comp-producto" class="kpi__valor" style="font-size:1.1rem;line-height:1.3"></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Periodo</div>
+              <div id="comp-periodo" class="kpi__valor" style="font-size:1.4rem"></div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Predicción</div>
+              <div id="comp-prediccion" class="kpi__valor"></div>
+              <div class="kpi__unidad">unidades estimadas</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Dato real</div>
+              <div id="comp-dato-real" class="kpi__valor"></div>
+              <div class="kpi__unidad">unidades reales</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi__etiqueta">Diferencia absoluta</div>
+              <div id="comp-diferencia" class="kpi__valor"></div>
+              <div class="kpi__unidad">|predicción − real|</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ PUNTO DE EXTENSIÓN — UNIDAD 3 ════════════════════ -->
+    <div class="extension-u3" role="complementary" aria-label="Punto de extensión futuro">
+      <div class="extension-u3__icono" aria-hidden="true">💬</div>
+      <div class="extension-u3__texto">
+        <div class="extension-u3__nombre">Asistente — Unidad 3</div>
+        <div class="extension-u3__descripcion">
+          Este espacio está reservado para el agente conversacional que se incorporará
+          en la Unidad 3. Permitirá consultar históricos y predicciones en lenguaje natural
+          a través del Servidor MCP en modo solo lectura. No implementado en esta unidad.
+        </div>
+      </div>
+      <div class="extension-u3__etiqueta" aria-hidden="true">Próximamente</div>
+    </div>
+
+  </main>
+
+  <!-- ══ PIE ═══════════════════════════════════════════════ -->
+  <footer class="pie">
+    Sistema de predicción de demanda · Supermercados Peruanos S.A. · Datos simulados
+  </footer>
+
+  <script src="js/datos-simulados.js"></script>
+  <script src="js/historicos.js"></script>
+  <script src="js/comparacion.js"></script>
+</body>
+</html>
